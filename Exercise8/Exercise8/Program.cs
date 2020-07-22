@@ -25,13 +25,14 @@ namespace Exercise8
 
             int Selected;
             List<string> Menu = new List<string>();
-            Menu.Add("Extract People");
-            Menu.Add("Extract People by Gender");
-            Menu.Add("Extract Person by Last Name");
-            Menu.Add("Extract People by Age");
-            Menu.Add("Update Person Info");
-            Menu.Add("Delete Person");
-            Menu.Add("Exit");
+            Menu.Add("Extract People");//1
+            Menu.Add("Extract People by Gender");//2
+            Menu.Add("Extract Person by Last Name");//3
+            Menu.Add("Extract People by Age");//4
+            Menu.Add("Insert Person");//5
+            Menu.Add("Update Person Info");//6
+            Menu.Add("Delete Person");//7
+            Menu.Add("Exit");//8
 
             DisplayMenu("Select:", Menu, out Selected);
 
@@ -60,15 +61,20 @@ namespace Exercise8
                     }
                 case 5:
                     {
-                        UpdatePersonInfo();
+                        InsertPerson();
                         break;
                     }
                 case 6:
                     {
-                        DeletePerson();
+                        UpdatePersonInfo();
                         break;
                     }
                 case 7:
+                    {
+                        DeletePerson();
+                        break;
+                    }
+                case 8:
                     {
                         Environment.Exit(0);
                         break;
@@ -88,7 +94,9 @@ namespace Exercise8
             using (var context = new SuccinctlyExamplesEntities())
             {
                 List<Person> people = context.People.ToList();
-                DisplayPersonTable(people);
+               
+                if (people != null)
+                    DisplayPersonTable(people);
             }
         }
         //IQueryable Extract People by Gender
@@ -203,6 +211,63 @@ namespace Exercise8
                             DisplayPersonTable(people);
                     }
                 }
+            }
+        }
+        //Insert Person
+        private static void InsertPerson()
+        {
+            using (var context = new SuccinctlyExamplesEntities())
+            {
+                Console.Clear();
+                Console.WriteLine("Enter data for this person below.");
+
+                Person P = new Person();
+                PromptInputMessage("Enter Last Name: ");
+                P.LastName = GetStringInput();
+                do
+                {
+                    PromptInputMessage("Enter First Name: ");
+                    P.FirstName = GetStringInput();
+
+                    if (string.IsNullOrWhiteSpace(P.FirstName))
+                        DisplayError("First Name cannot be empty.");
+
+                } while (string.IsNullOrWhiteSpace(P.FirstName));
+
+
+                PromptInputMessage("Enter Middle Name: ");
+                P.MiddleName = GetStringInput();
+
+                PromptInputMessage("Enter Date of Birth: ");
+                DateTime DOB;
+                bool isValidDOB = DateTime.TryParse(Console.ReadLine(), out DOB);
+                if (isValidDOB)
+                    P.DateOfBirth = DOB;
+                else
+                {
+                    DisplayError("Invalid Date. It will be set to null.");
+                    P.DateOfBirth = null;
+                }
+
+                PromptInputMessage("Enter Gender (0 = Unknown, 1 = Male, 2 = Female): ");
+                int GenderID;
+                bool isValidGender = int.TryParse(Console.ReadLine(), out GenderID);
+                if (isValidGender)
+                    isValidGender = GenderID >= 0 && GenderID < 3 ? true : false;
+                if (isValidGender)
+                    P.GenderID = GenderID;
+                else
+                {
+                    DisplayError("Invalid Gender. It will be set to null.");
+                    P.GenderID = null;
+                }
+
+                context.People.Add(P);
+
+                if (context.SaveChanges() > 0)
+                    Console.WriteLine("Insert Success");
+                else
+                    DisplayError("Error!");
             }
         }
         //Update Person Information

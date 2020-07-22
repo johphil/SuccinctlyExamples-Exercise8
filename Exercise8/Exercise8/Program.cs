@@ -88,6 +88,8 @@ namespace Exercise8
             Console.WriteLine("Press any key to return.");
         }
 
+
+        /************************************** QUERY ***********************************/
         //List Extract All People
         private static void GetPeople()
         {
@@ -126,7 +128,8 @@ namespace Exercise8
 
             using (var context = new SuccinctlyExamplesEntities())
             {
-                Person person = context.People.SingleOrDefault(p => p.LastName == LastName);
+                IEnumerable<Person> query = context.People;
+                Person person = query.SingleOrDefault(p => p.LastName == LastName);
 
                 if (person != null)
                     DisplayPersonTable(null, person);
@@ -150,6 +153,7 @@ namespace Exercise8
             do
             {
                 words = null;
+                Console.WriteLine("Input: = > < >= <= and the age. example: Age is > 10, Age is = 14, Age is >= 20.");
                 PromptInputMessage(" Age is ");
                 string input = GetStringInput();
                 words = input.Split(' ');
@@ -363,6 +367,9 @@ namespace Exercise8
             }
         }
 
+
+
+        /************************************** INPUT / OUTPUT ***********************************/
         //Display Output
         private static void DisplayPersonTable(List<Person> lPersons = null, Person person = null)
         {

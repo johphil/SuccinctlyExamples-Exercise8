@@ -21,12 +21,26 @@ namespace Exercise8
         public Nullable<System.DateTime> DateOfBirth { get; set; }
         public Nullable<int> GenderID { get; set; }
         public Nullable<System.DateTime> LastLoginTime { get; set; }
-    
+        
         public virtual Gender Gender { get; set; }
 
         public string FullName
         {
             get { return $"{FirstName} {MiddleName} {LastName}"; }
+        }
+        public int Age
+        {
+            get
+            {
+                if (DateOfBirth != null)
+                {
+                    DateTime bday = DateOfBirth.Value;
+                    TimeSpan A = DateTime.Now - bday;
+                    return (int)A.TotalHours / 8766;
+                }
+                else
+                    return 0;
+            }
         }
     }
 }

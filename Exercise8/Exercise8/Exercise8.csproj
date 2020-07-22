@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Gender.cs">
       <DependentUpon>SuccinctlyModels.tt</DependentUpon>
     </Compile>
